@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landwirtschaft und Klimawandel</title>
+    <style>
+        :root {
+            --color-bg-primary: #fcfcf9;
+            --color-bg-secondary: #fffffe;
+            --color-surface: #f5f5f5;
+            --color-text-primary: #13343b;
+            --color-text-secondary: #626c71;
+            --color-accent: #21808d;
+            --color-accent-hover: #1d7480;
+            --color-warning: #a84b2f;
+            --color-danger: #c0152f;
+            --color-border: rgba(94, 82, 64, 0.2);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-bg-primary: #1f2121;
+                --color-bg-secondary: #262828;
+                --color-surface: #1e293b;
+                --color-text-primary: #f5f5f5;
+                --color-text-secondary: #a7a9a9;
+                --color-accent: #32b8c6;
+                --color-accent-hover: #2da6b2;
+                --color-warning: #e68161;
+                --color-danger: #ff5459;
+                --color-border: rgba(119, 124, 124, 0.3);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--color-bg-primary);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 20px;
+            background: var(--color-bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--color-accent);
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: 2px solid var(--color-border);
+            background: var(--color-bg-secondary);
+            color: var(--color-text-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: var(--color-accent);
+            color: white;
+            border-color: var(--color-accent);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--color-bg-secondary);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--color-accent);
+        }
+
+        .card h2 {
+            color: var(--color-accent);
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .card h3 {
+            color: var(--color-text-primary);
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: var(--color-surface);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid var(--color-border);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--color-accent);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .warning-box {
+            background: rgba(168, 75, 47, 0.1);
+            border-left: 4px solid var(--color-warning);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .danger-box {
+            background: rgba(192, 21, 47, 0.1);
+            border-left: 4px solid var(--color-danger);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--color-text-secondary);
+        }
+
+        .impact-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: var(--color-surface);
+            border-radius: 8px;
+            border-left: 3px solid var(--color-accent);
+        }
+
+        .impact-item strong {
+            color: var(--color-accent);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .comparison-table th {
+            background: var(--color-surface);
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--color-surface);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .action-card {
+            background: var(--color-surface);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--color-border);
+        }
+
+        .action-card h4 {
+            color: var(--color-accent);
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .source {
+            font-size: 0.85rem;
+            color: var(--color-text-secondary);
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Landwirtschaft und Klimawandel</h1>
+            <p class="subtitle">Bedrohungen für die landwirtschaftliche Produktion in Deutschland und Europa</p>
+            <p style="color: var(--color-text-secondary); font-size: 0.95rem;">Kursstufe Gymnasium Baden-Württemberg</p>
+        </header>
+
+        <div class="tab-buttons">
+            <button class="tab-btn active" onclick="showTab('uebersicht')">Übersicht</button>
+            <button class="tab-btn" onclick="showTab('deutschland')">Deutschland</button>
+            <button class="tab-btn" onclick="showTab('europa')">Europa</button>
+            <button class="tab-btn" onclick="showTab('folgen')">Konkrete Folgen</button>
+            <button class="tab-btn" onclick="showTab('anpassung')">Anpassungsstrategien</button>
+        </div>
+
+        <div id="uebersicht" class="content-section active">
+            <div class="card">
+                <h2>Die doppelte Herausforderung</h2>
+                <p>Die Landwirtschaft steht im Zentrum des Klimawandels – sie ist sowohl <strong>Verursacher</strong> als auch <strong>Betroffene</strong>.</p>
+
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <span class="stat-number">8,9%</span>
+                        <span class="stat-label">der deutschen Treibhausgasemissionen stammen aus der Landwirtschaft</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">75,7%</span>
+                        <span class="stat-label">der deutschen Methan-Emissionen gehen auf die Landwirtschaft zurück</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">74,5%</span>
+                        <span class="stat-label">der deutschen Lachgas-Emissionen stammen aus der Landwirtschaft</span>
+                    </div>
+                </div>
+
+                <h3>Warum ist die Landwirtschaft besonders betroffen?</h3>
+                <ul>
+                    <li><strong>Direkte Abhängigkeit vom Wetter:</strong> Temperatur, Niederschlag und Extremereignisse beeinflussen Wachstum und Ertrag unmittelbar</li>
+                    <li><strong>Langfristige Planung:</strong> Aussaat, Pflege und Ernte folgen festen Zyklen – Wetterextreme stören diese Abläufe</li>
+                    <li><strong>Keine Ausweichmöglichkeiten:</strong> Felder können nicht kurzfristig verlegt werden</li>
+                    <li><strong>Komplexe Ökosysteme:</strong> Schädlinge, Krankheiten und Bestäuber reagieren ebenfalls auf Klimaveränderungen</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Zentrale Klimaveränderungen in Europa</h2>
+                
+                <div class="impact-item">
+                    <strong>🌡️ Temperaturanstieg</strong>
+                    Deutschland hat sich bereits um ca. 2,3°C erwärmt – etwa doppelt so stark wie der globale Durchschnitt. In Europa steigen die Temperaturen besonders stark.
+                </div>
+
+                <div class="impact-item">
+                    <strong>💧 Veränderte Niederschläge</strong>
+                    Weniger Sommerniederschlag, mehr Winterniederschlag, insgesamt unregelmäßigere Verteilung. Das pflanzenverfügbare Wasser während der Vegetationsperiode hat in den letzten 60 Jahren signifikant abgenommen.
+                </div>
+
+                <div class="impact-item">
+                    <strong>⚡ Häufigere Extremwetter</strong>
+                    Dürreperioden (2018, 2019, 2022), Starkregen und Überschwemmungen (2021, 2023), Spätfröste, Hagel und Stürme nehmen zu.
+                </div>
+
+                <div class="impact-item">
+                    <strong>🦟 Neue Schädlinge und Krankheiten</strong>
+                    Mildere Winter ermöglichen das Überleben von Schädlingen. Neue Arten wandern aus wärmeren Regionen ein.
+                </div>
+            </div>
+        </div>
+
+        <div id="deutschland" class="content-section">
+            <div class="card">
+                <h2>Klimawandel und Landwirtschaft in Deutschland</h2>
+                
+                <div class="warning-box">
+                    <strong>⚠️ Aktuelle Situation:</strong> Deutschland erwärmt sich etwa doppelt so schnell wie der globale Durchschnitt. Die Erwärmung liegt bereits bei ca. 2,3°C über dem vorindustriellen Niveau.
+                </div>
+
+                <h3>Beobachtete Veränderungen</h3>
+                <ul>
+                    <li><strong>Verfrühung der Vegetation:</strong> Apfelbäume und Raps blühen heute 20 Tage früher als vor 50 Jahren</li>
+                    <li><strong>Dürrejahre:</strong> 2018, 2019 und 2022 brachten extreme Trockenheit und massive Ertragseinbußen</li>
+                    <li><strong>Waldsterben:</strong> Seit 2018 sichtbare Schäden durch Trockenheit und Hitze</li>
+                    <li><strong>Grundwassermangel:</strong> Mehrjährige Dürreperioden haben die Grundwasserspeicher stark reduziert</li>
+                </ul>
+
+                <h3>Ernteeinbußen durch Klimawandel</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Jahr</th>
+                            <th>Ereignis</th>
+                            <th>Auswirkung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2018</td>
+                            <td>Extreme Dürre</td>
+                            <td>6% Rückgang bei Getreide, massive Futtermittelknappheit</td>
+                        </tr>
+                        <tr>
+                            <td>2022</td>
+                            <td>Hitzewelle und Trockenheit</td>
+                            <td>Ca. 100.000 Hitzetote in Europa, Ernteausfälle</td>
+                        </tr>
+                        <tr>
+                            <td>2023</td>
+                            <td>Starkregen während Ernte</td>
+                            <td>Erhebliche Qualitätseinbußen und Ertragsausfälle bei Getreide</td>
+                        </tr>
+                        <tr>
+                            <td>2024</td>
+                            <td>Starkregen und Hochwasser</td>
+                            <td>9,9% Ernteeinbuße gegenüber Vorjahren, 22% weniger Äpfel, Niedersachsen -5,4%, NRW -12,4% Hektarertrag</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="danger-box">
+                    <strong>🔥 Zukunftsprognose:</strong> Bei 3°C globaler Erwärmung würde Deutschland 5-6°C wärmer – mit katastrophalen Folgen für Natur und Landwirtschaft. Bestehende Ökosysteme wären nicht mehr angepasst.
+                </div>
+
+                <h3>Regionale Unterschiede in Deutschland</h3>
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <span class="stat-number">Norden</span>
+                        <span class="stat-label">Hochwasser, Starkregen, Anbauflächenverlust durch Überflutung</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">Osten</span>
+                        <span class="stat-label">Besonders von Dürre betroffen, sandige Böden verschärfen Wassermangel</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">Süden</span>
+                        <span class="stat-label">Spätfröste nach früher Blüte, Hagelstürme im Sommer</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Betroffene Kulturen in Deutschland</h2>
+                
+                <div class="action-grid">
+                    <div class="action-card">
+                        <h4>🌾 Getreide (Weizen, Gerste)</h4>
+                        <p><strong>Risiken:</strong> Frühjahrstrockenheit, Hitzestress während Blüte, Qualitätsverlust durch Starkregen bei Ernte</p>
+                        <p><strong>Ertragsstagnation:</strong> Weizen zeigt seit 2000 keine Ertragssteigerung mehr, leichter Rückgang erkennbar</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🥔 Kartoffeln</h4>
+                        <p><strong>Risiken:</strong> Trockenheit reduziert Knollenwachstum, Hitze führt zu Qualitätseinbußen, Krankheiten bei Feuchtigkeit</p>
+                        <p><strong>2024:</strong> Starke Ausbreitung von Kraut- und Knollenfäule</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🌽 Mais</h4>
+                        <p><strong>Chancen:</strong> Wärmeliebend, profitiert von Temperaturanstieg in nördlichen Regionen</p>
+                        <p><strong>Risiken:</strong> Trockenheit in kritischen Wachstumsphasen, große Ertragsschwankungen</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🍎 Obst</h4>
+                        <p><strong>Risiken:</strong> Frühere Blüte erhöht Spätfrostgefahr, Trockenheit bei Fruchtbildung, neue Schädlinge</p>
+                        <p><strong>2024:</strong> 22% weniger Apfelernte durch witterungsbedingte Krankheiten</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🍇 Wein</h4>
+                        <p><strong>Chancen:</strong> Längere Vegetationsperiode, höhere Zuckergehalte</p>
+                        <p><strong>Risiken:</strong> Spätfröste, extreme Hitze, Trockenheit, Starkregen fördert Pilzkrankheiten</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🌿 Grünland/Futter</h4>
+                        <p><strong>Risiken:</strong> Dürre führt zu Futtermangel in der Tierhaltung, mehrfache Ernteausfälle möglich</p>
+                        <p><strong>2018-2019:</strong> Massive Futterknappheit, staatliche Hilfen notwendig</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="europa" class="content-section">
+            <div class="card">
+                <h2>Klimawandel und Landwirtschaft in Europa</h2>
+                
+                <div class="warning-box">
+                    <strong>🌍 Europäische Perspektive:</strong> Die Auswirkungen des Klimawandels variieren stark zwischen Nord-, Mittel- und Südeuropa. Während der Norden teilweise profitieren könnte, steht der Süden vor existenziellen Herausforderungen.
+                </div>
+
+                <h3>Regionale Unterschiede</h3>
+
+                <div class="impact-item">
+                    <strong>🔵 Nordeuropa (Skandinavien, Baltikum, Großbritannien)</strong>
+                    <p><strong>Potenzielle Vorteile:</strong></p>
+                    <ul>
+                        <li>Längere Wachstumsperioden und kürzere Frostperioden</li>
+                        <li>Anbau neuer Kulturen möglich (Weinanbau in Dänemark, Schweden, GB)</li>
+                        <li>Geeignete Anbauflächen könnten sich bis 2100 von 32% auf über 75% erhöhen</li>
+                        <li>Britische Weinproduktion hat sich in 20 Jahren vervierfacht (13,2 Mio. Flaschen 2018)</li>
+                    </ul>
+                    <p><strong>Neue Risiken:</strong></p>
+                    <ul>
+                        <li>Feuchtere Sommer machen Pflanzen anfälliger für Krankheiten</li>
+                        <li>Ungewohnte Wetterlagen erfordern neue Anbaumethoden</li>
+                        <li>Infrastruktur nicht auf intensive Landwirtschaft ausgelegt</li>
+                    </ul>
+                </div>
+
+                <div class="impact-item">
+                    <strong>🟡 Mitteleuropa (Deutschland, Frankreich, Polen, Österreich)</strong>
+                    <p><strong>Hauptprobleme:</strong></p>
+                    <ul>
+                        <li>Temperaturextreme und stärkere Schwankungen</li>
+                        <li>Dürrerisiko steigt, besonders im Sommer</li>
+                        <li>Häufigere Flussüberschwemmungen im Winter/Frühjahr</li>
+                        <li>Stärkere Schwankungen bei Ernteerträgen</li>
+                        <li>Erhöhtes Waldbrandrisiko</li>
+                    </ul>
+                    <p><strong>Beispiele:</strong> Loire und Po führten 2022 extrem wenig Wasser, Rhein-Schifffahrt eingeschränkt (2025)</p>
+                </div>
+
+                <div class="impact-item">
+                    <strong>🔴 Südeuropa (Mittelmeerraum, Iberische Halbinsel)</strong>
+                    <p><strong>Massive Bedrohungen:</strong></p>
+                    <ul>
+                        <li>Drastisch zurückgehende Wasservorräte</li>
+                        <li>Zunehmende Desertifikation (Verwüstung)</li>
+                        <li>Extreme Hitze und Dürre werden zur Norm</li>
+                        <li>Traditionelle Kulturen (Oliven, Weintrauben) unter Stress</li>
+                        <li>Artenschwund und Ökosystemzusammenbruch</li>
+                        <li>Erhebliche Ernterückgänge</li>
+                    </ul>
+                    <p><strong>Historischer Kontext:</strong> Syrien erlebte vor den Unruhen 2011 die schlimmste Dürre seit ca. 900 Jahren, was zu Binnenflüchtlingen und Konflikten beitrug</p>
+                </div>
+
+                <h3>Aktuelle Daten und Prognosen</h3>
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <span class="stat-number">1-5,5°C</span>
+                        <span class="stat-label">Erwartete Temperaturerhöhung bis 2100 in Europa</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">90×</span>
+                        <span class="stat-label">Extreme Monatsanomalien (3 Standardabweichungen) sind heute 90-mal häufiger</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">50.000 km²</span>
+                        <span class="stat-label">Pro Jahr vergrößert sich die globale Dürrefläche um etwa die Fläche der Schweiz</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Verschiebung von Anbaugebieten</h2>
+                
+                <div class="danger-box">
+                    <strong>🌍 Geografische Verlagerung:</strong> Der Klimawandel verschiebt traditionelle Anbaugebiete nach Norden. Was früher nur im Süden möglich war, gelingt jetzt auch in nördlichen Regionen – während südliche Gebiete teilweise unbewohnbar werden.
+                </div>
+
+                <h3>Beispiele für Verschiebungen</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Kultur</th>
+                            <th>Traditionelles Gebiet</th>
+                            <th>Neue Gebiete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Weinanbau</td>
+                            <td>Frankreich, Italien, Spanien</td>
+                            <td>Dänemark, Schweden, Großbritannien (Vervierfachung in 20 Jahren)</td>
+                        </tr>
+                        <tr>
+                            <td>Aprikosen, Nektarinen</td>
+                            <td>Südeuropa</td>
+                            <td>Niedersachsen (Deutschland)</td>
+                        </tr>
+                        <tr>
+                            <td>Mais (höhere Erträge)</td>
+                            <td>Süddeutschland</td>
+                            <td>Norddeutschland, Dänemark</td>
+                        </tr>
+                        <tr>
+                            <td>Oliven</td>
+                            <td>Mittelmeerraum</td>
+                            <td>Unter Hitzestress, Rückgang erwartet</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="folgen" class="content-section">
+            <div class="card">
+                <h2>Konkrete Folgen für die landwirtschaftliche Produktion</h2>
+
+                <h3>1. Ertragseinbußen und Ernteausfälle</h3>
+                <div class="warning-box">
+                    <strong>Zentrale Bedrohung:</strong> Extremwetterereignisse führen zu massiven Ertragsverlusten. Bei Dürren können Nahrungsmittelverluste bis zu 84% betragen (UN-Studie 2015), bei Überschwemmungen 15%, bei Stürmen 18%.
+                </div>
+
+                <ul>
+                    <li><strong>Ertragsvariabilität nimmt zu:</strong> Schwankungen zwischen Jahren werden größer, was Planungssicherheit erschwert</li>
+                    <li><strong>Qualitätsverluste:</strong> Nicht nur Menge, auch Qualität leidet (Proteingehalt, Backqualität, etc.)</li>
+                    <li><strong>Komplette Ernteausfälle:</strong> In Extremjahren regional möglich</li>
+                    <li><strong>Mehrfache Ausfälle:</strong> Wenn Folgeaussaaten ebenfalls scheitern (z.B. Grünland 2018-2019)</li>
+                </ul>
+
+                <h3>2. Schädlinge und Krankheiten</h3>
+                <div class="impact-item">
+                    <strong>🦟 Neue und verstärkte Bedrohungen</strong>
+                    <ul>
+                        <li>Mildere Winter: Schädlinge überleben, mehrere Generationen pro Jahr möglich</li>
+                        <li>Einwanderung neuer Arten aus wärmeren Regionen</li>
+                        <li>Feucht-warmes Klima begünstigt Pilzkrankheiten (Kraut- und Knollenfäule, Falscher Mehltau)</li>
+                        <li>Geschwächte Pflanzen durch Trockenstress sind anfälliger</li>
+                        <li>Traditionelle Bekämpfungsstrategien funktionieren nicht mehr</li>
+                    </ul>
+                </div>
+
+                <h3>3. Wasserknappheit</h3>
+                <div class="danger-box">
+                    <strong>💧 Kritische Ressource:</strong> Das pflanzenverfügbare Wasser während der Vegetationsperiode hat in den letzten 60 Jahren in Deutschland signifikant abgenommen.
+                </div>
+
+                <ul>
+                    <li><strong>Grundwassermangel:</strong> Mehrjährige Dürren reduzieren Grundwasserspeicher nachhaltig</li>
+                    <li><strong>Konkurrenzkonflikte:</strong> Landwirtschaft, Industrie, Haushalte konkurrieren um Wasser</li>
+                    <li><strong>Bewässerung notwendig:</strong> Kulturen, die früher ohne Bewässerung auskamen, brauchen jetzt zusätzliches Wasser</li>
+                    <li><strong>Infrastruktur fehlt:</strong> Viele Regionen haben keine Bewässerungsinfrastruktur</li>
+                    <li><strong>Kosten steigen:</strong> Energie für Bewässerung, Investitionen in Infrastruktur</li>
+                </ul>
+
+                <h3>4. Bodendegradation</h3>
+                <div class="impact-item">
+                    <strong>🌱 Verlust der Bodenfruchtbarkeit</strong>
+                    <ul>
+                        <li><strong>Erosion:</strong> Starkregen spült fruchtbaren Oberboden weg</li>
+                        <li><strong>Humusabbau:</strong> Hitze und Trockenheit beschleunigen Abbau organischer Substanz</li>
+                        <li><strong>Verdichtung:</strong> Schwere Maschinen auf feuchten Böden</li>
+                        <li><strong>Versalzung:</strong> In bewässerten Regionen bei falscher Bewässerung</li>
+                        <li><strong>Mikrobiom-Veränderung:</strong> Bodenlebewesen leiden unter Extrembedingungen</li>
+                    </ul>
+                </div>
+
+                <h3>5. Wirtschaftliche Folgen</h3>
+                <div class="stat-grid">
+                    <div class="stat-box">
+                        <span class="stat-number">Einkommenseinbußen</span>
+                        <span class="stat-label">Landwirte verlieren direkt Einkommen durch Ernteausfälle</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">Höhere Kosten</span>
+                        <span class="stat-label">Bewässerung, Pflanzenschutz, Versicherungen werden teurer</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">Preisschwankungen</span>
+                        <span class="stat-label">Ernteausfälle führen zu Preisspitzen bei Lebensmitteln</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-number">Existenzbedrohung</span>
+                        <span class="stat-label">Mehrjährige Verluste gefährden Betriebe (staatliche Hilfen 2018 notwendig)</span>
+                    </div>
+                </div>
+
+                <h3>6. Versorgungssicherheit</h3>
+                <div class="danger-box">
+                    <strong>⚠️ Ernährungssicherheit in Gefahr:</strong> Wenn Erträge stark schwanken und insgesamt sinken, ist die Versorgung mit Lebensmitteln gefährdet – besonders in Regionen, die bereits jetzt von Hunger betroffen sind.
+                </div>
+
+                <ul>
+                    <li>Gleichzeitige Ernteausfälle in mehreren Regionen möglich (globale Wetterextreme)</li>
+                    <li>Abhängigkeit von Importen steigt</li>
+                    <li>Preise für Grundnahrungsmittel steigen</li>
+                    <li>Soziale Spannungen und Konflikte (Beispiel Syrien: Dürre trug zu Unruhen bei)</li>
+                    <li>Migration aus unbewohnbar werdenden Regionen</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Zeitliche Perspektive: Was kommt auf uns zu?</h2>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Zeithorizont</th>
+                            <th>Erwartete Veränderungen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Bereits eingetreten</strong></td>
+                            <td>
+                                • 1,2°C globale Erwärmung, 2,3°C in Deutschland<br>
+                                • Häufigere Extremwetter<br>
+                                • Ernteeinbußen 2018, 2019, 2022, 2024<br>
+                                • Neue Schädlinge und Krankheiten<br>
+                                • Waldsterben seit 2018
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bis 2030</strong></td>
+                            <td>
+                                • Wahrscheinlich 1,5°C Grenze überschritten<br>
+                                • Weitere Zunahme von Dürren und Starkregen<br>
+                                • Anpassung der Landwirtschaft dringend notwendig<br>
+                                • Erhöhtes Risiko für Kipppunkte
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bis 2050</strong></td>
+                            <td>
+                                • 2-3°C Erwärmung möglich (je nach Klimaschutz)<br>
+                                • Erhebliche Verschiebung von Anbaugebieten<br>
+                                • Südeuropa teilweise für Landwirtschaft ungeeignet<br>
+                                • Nordeuropa: deutlich veränderte Bedingungen
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bis 2100</strong></td>
+                            <td>
+                                • 1,5-5,5°C Erwärmung (stark abhängig von Emissionen)<br>
+                                • Bei 3°C+ global: katastrophale Folgen<br>
+                                • Massive Migrationsbewegungen<br>
+                                • Grundlegende Umgestaltung der Landwirtschaft notwendig
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warning-box">
+                    <strong>⏰ Entscheidende Phase:</strong> Die nächsten 5-10 Jahre sind kritisch. Nur bei "schneller, tiefer, in den meisten Fällen sofortiger" Emissionsreduktion (IPCC) können die schlimmsten Folgen verhindert werden.
+                </div>
+            </div>
+        </div>
+
+        <div id="anpassung" class="content-section">
+            <div class="card">
+                <h2>Anpassungsstrategien für die Landwirtschaft</h2>
+                
+                <p>Die Landwirtschaft muss sich an den Klimawandel anpassen UND gleichzeitig ihre eigenen Emissionen reduzieren. Hier sind die wichtigsten Strategien:</p>
+
+                <h3>1. Pflanzenzüchtung und Sortenwahl</h3>
+                <div class="action-grid">
+                    <div class="action-card">
+                        <h4>🌾 Trockenresistente Sorten</h4>
+                        <p>Züchtung von Pflanzen mit tieferen Wurzeln, geringerem Wasserbedarf und besserer Trockentoleranz</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🔥 Hitzetolerante Sorten</h4>
+                        <p>Sorten, die bei höheren Temperaturen stabil bleiben und während Hitzephasen weiter wachsen</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🦟 Resistente Sorten</h4>
+                        <p>Züchtung auf Resistenz gegen neue Schädlinge und Krankheiten</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>⏰ Frühe/späte Sorten</h4>
+                        <p>Anpassung der Vegetationszeit an veränderte Jahreszeiten</p>
+                    </div>
+                </div>
+
+                <h3>2. Anbaumanagement</h3>
+                <div class="impact-item">
+                    <strong>🌱 Vielfältige Fruchtfolgen</strong>
+                    <p>Statt Monokulturen: Wechsel verschiedener Kulturen reduziert Schädlingsdruck und verbessert Bodengesundheit</p>
+                </div>
+
+                <div class="impact-item">
+                    <strong>📅 Angepasste Aussaattermine</strong>
+                    <p>Verschiebung von Aussaat und Ernte, um Extremwetter zu vermeiden und Vegetationsperiode optimal zu nutzen</p>
+                </div>
+
+                <div class="impact-item">
+                    <strong>🌾 Neue Kulturen</strong>
+                    <p>Anbau von Kulturen, die besser an zukünftige Bedingungen angepasst sind (z.B. Hirse statt Weizen, Soja in wärmeren Regionen)</p>
+                </div>
+
+                <h3>3. Bodenschutz und Humusaufbau</h3>
+                <div class="warning-box">
+                    <strong>🌱 Gesunde Böden sind die Grundlage:</strong> Humusreiche Böden speichern mehr Wasser, sind widerstandsfähiger gegen Erosion und binden CO₂.
+                </div>
+
+                <ul>
+                    <li><strong>Minimale Bodenbearbeitung:</strong> Weniger Pflügen reduziert Erosion und erhält Bodenstruktur</li>
+                    <li><strong>Zwischenfrüchte:</strong> Begrünung zwischen Hauptkulturen schützt Boden und bindet Stickstoff</li>
+                    <li><strong>Kompost und Mulch:</strong> Organische Substanz verbessert Wasserhaltefähigkeit</li>
+                    <li><strong>Agroforst:</strong> Bäume auf Ackerflächen spenden Schatten, reduzieren Wind und speichern CO₂</li>
+                    <li><strong>Carbon Farming:</strong> Gezielte Maßnahmen zur CO₂-Bindung im Boden</li>
+                </ul>
+
+                <h3>4. Wassermanagement</h3>
+                <div class="action-grid">
+                    <div class="action-card">
+                        <h4>💧 Effiziente Bewässerung</h4>
+                        <p>Tröpfchenbewässerung statt Beregnuung spart bis zu 50% Wasser, Sensoren optimieren Zeitpunkt und Menge</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🌧️ Regenwasserspeicherung</h4>
+                        <p>Auffangen und Speichern von Regenwasser in Teichen und Zisternen für Trockenperioden</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🏞️ Landschaftsgestaltung</h4>
+                        <p>Hecken und Gräben verlangsamen Abfluss, Feuchtgebiete speichern Wasser</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🌊 Drainage-Management</h4>
+                        <p>In nassen Regionen: Anpassung der Entwässerung an häufigere Starkregen</p>
+                    </div>
+                </div>
+
+                <h3>5. Technische Maßnahmen</h3>
+                <ul>
+                    <li><strong>Frostschutz:</strong> Beregnung oder Frostschutzkerzen bei Spätfrösten im Obstbau</li>
+                    <li><strong>Hagelnetze:</strong> Schutz empfindlicher Kulturen vor Hagel</li>
+                    <li><strong>Precision Farming:</strong> GPS-gestützte Präzisionslandwirtschaft optimiert Ressourceneinsatz</li>
+                    <li><strong>Wettervorhersage:</strong> Moderne Prognosemodelle ermöglichen bessere Planung</li>
+                    <li><strong>Kühlung in Ställen:</strong> Klimaanlagen und Ventilatoren für Tierwohl bei Hitze</li>
+                </ul>
+
+                <h3>6. Tierhaltung anpassen</h3>
+                <div class="impact-item">
+                    <strong>🐄 Herausforderungen für Tiere</strong>
+                    <ul>
+                        <li>Hitzestress reduziert Milchleistung und Fruchtbarkeit</li>
+                        <li>Futtermangel bei Dürre (2018: massive Futterknappheit)</li>
+                        <li>Neue Krankheiten durch veränderte Bedingungen</li>
+                    </ul>
+                    <p><strong>Anpassungen:</strong> Hitzeangepasste Rassen, bessere Stallbelüftung, schattige Weideflächen, angepasstes Futtermanagement, Futterreserven anlegen</p>
+                </div>
+
+                <h3>7. Ökologischer Landbau</h3>
+                <div class="warning-box">
+                    <strong>🌿 Nachhaltigkeit zahlt sich aus:</strong> Ökologischer Landbau ist oft widerstandsfähiger gegen Klimaextreme durch gesündere Böden, höhere Artenvielfalt und geringere Abhängigkeit von externen Inputs.
+                </div>
+
+                <ul>
+                    <li>Verzicht auf synthetische Dünger und Pestizide reduziert Emissionen</li>
+                    <li>Vielfältigere Fruchtfolgen und Mischkulturen</li>
+                    <li>Bessere Bodengesundheit durch organische Düngung</li>
+                    <li>Höheres Wasserspeichervermögen der Böden</li>
+                    <li>Förderung von Nützlingen statt chemische Schädlingsbekämpfung</li>
+                </ul>
+
+                <h3>8. Politische und gesellschaftliche Maßnahmen</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Maßnahme</th>
+                            <th>Beschreibung</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Forschungsförderung</strong></td>
+                            <td>Entwicklung neuer Sorten, Anbaumethoden und Technologien</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Finanzielle Unterstützung</strong></td>
+                            <td>Hilfe bei Investitionen in Anpassungsmaßnahmen (Bewässerung, Frostschutz)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Versicherungen</strong></td>
+                            <td>Mehrgefahrenversicherungen gegen Wetterextreme</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Beratung</strong></td>
+                            <td>Wissenstransfer zu Anpassungsstrategien</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Agrarförderung umgestalten</strong></td>
+                            <td>Förderung klimafreundlicher Praktiken statt pauschaler Flächenprämien</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Emissionsreduktion</strong></td>
+                            <td>Klimaschutz ist die beste Anpassung: Weniger Erwärmung = weniger Anpassungsbedarf</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>9. Ernährungsumstellung</h3>
+                <div class="danger-box">
+                    <strong>🍽️ Auch Verbraucher sind gefragt:</strong> Unsere Ernährungsgewohnheiten haben großen Einfluss auf Landwirtschaft und Klima.
+                </div>
+
+                <ul>
+                    <li><strong>Weniger Fleisch:</strong> Tierhaltung verursacht 75,7% der Methan-Emissionen</li>
+                    <li><strong>Regionale und saisonale Produkte:</strong> Weniger Transport, angepasst an lokale Bedingungen</li>
+                    <li><strong>Weniger Lebensmittelverschwendung:</strong> 30% der Lebensmittel werden weggeworfen</li>
+                    <li><strong>Akzeptanz neuer Kulturen:</strong> Hirse, Linsen, alternative Proteinquellen</li>
+                    <li><strong>Fairer Preis:</strong> Landwirte brauchen angemessene Bezahlung für nachhaltige Produktion</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Grenzen der Anpassung</h2>
+                
+                <div class="danger-box">
+                    <strong>⚠️ Anpassung allein reicht nicht:</strong> Bei unkontrollierter Erwärmung (3°C+) stoßen alle Anpassungsstrategien an ihre Grenzen. Klimaschutz (Emissionsreduktion) ist zwingend notwendig!
+                </div>
+
+                <h3>Was Anpassung NICHT leisten kann:</h3>
+                <ul>
+                    <li><strong>Fundamentale physikalische Grenzen:</strong> Pflanzen können bei extremer Hitze nicht überleben</li>
+                    <li><strong>Wasserknappheit:</strong> Wenn kein Wasser verfügbar ist, hilft auch Bewässerung nicht</li>
+                    <li><strong>Kumulative Effekte:</strong> Mehrere Extremereignisse nacheinander überfordern jedes System</li>
+                    <li><strong>Ökonomische Grenzen:</strong> Anpassung kostet Geld, das nicht unbegrenzt verfügbar ist</li>
+                    <li><strong>Geschwindigkeit:</strong> Ökosysteme und Landwirtschaft können sich nicht beliebig schnell anpassen</li>
+                    <li><strong>Kipppunkte:</strong> Bei Überschreitung von Schwellenwerten helfen keine Maßnahmen mehr</li>
+                </ul>
+
+                <div class="warning-box">
+                    <strong>✅ Fazit:</strong> Anpassung ist notwendig und möglich – aber nur bei begrenzter Erwärmung (1,5-2°C). Darüber hinaus wird Landwirtschaft in vielen Regionen unmöglich oder unrentabel. <strong>Klimaschutz hat absolute Priorität!</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Was können wir als Einzelne tun?</h2>
+                
+                <div class="action-grid">
+                    <div class="action-card">
+                        <h4>🍽️ Ernährung umstellen</h4>
+                        <p>Weniger Fleisch, mehr pflanzliche Produkte, regional und saisonale, weniger Verschwendung</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🛒 Bewusst einkaufen</h4>
+                        <p>Bio-Produkte unterstützen, faire Preise zahlen, lokale Landwirte unterstützen</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>📢 Aufklären und diskutieren</h4>
+                        <p>Wissen teilen, in der Schule und im Freundeskreis über Zusammenhänge sprechen</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🗳️ Politisch aktiv werden</h4>
+                        <p>Klimaschutz einfordern, Petitionen unterstützen, bei Wahlen klimafreundliche Parteien wählen</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>🌱 Eigenes Engagement</h4>
+                        <p>Schulgarten, Urban Gardening, Projekte zur Nachhaltigkeit</p>
+                    </div>
+
+                    <div class="action-card">
+                        <h4>💚 CO₂-Fußabdruck reduzieren</h4>
+                        <p>Energie sparen, Mobilität überdenken, bewusst konsumieren – jeder Beitrag zählt</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Quellen:</strong> Bundesanstalt für Landwirtschaft und Ernährung (BLE), Umweltbundesamt (UBA), Europäische Umweltagentur (EEA), Deutscher Wetterdienst (DWD), Leibniz-Zentrum für Agrarlandschaftsforschung (ZALF), BUND Naturschutz, Bundesministerium für Ernährung und Landwirtschaft (BMEL), Deutsche Welle, Bundeszentrale für politische Bildung, Welthungerhilfe</p>
+            <p style="margin-top: 20px;">Erstellt für die Kursstufe am Gymnasium Baden-Württemberg • Februar 2026</p>
+        </footer>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Alle Sections ausblenden
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Alle Buttons deaktivieren
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Gewählte Section anzeigen
+            document.getElementById(tabName).classList.add('active');
+
+            // Entsprechenden Button aktivieren
+            event.target.classList.add('active');
+
+            // Nach oben scrollen für bessere UX
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Zusätzliche Interaktivität: Klick auf Stat-Boxen
+        document.addEventListener('DOMContentLoaded', function() {
+            const statBoxes = document.querySelectorAll('.stat-box');
+            statBoxes.forEach(box => {
+                box.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
